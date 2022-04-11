@@ -1,7 +1,7 @@
 package ru.netology.manager;
 
 import lombok.*;
-import ru.netology.data.Film;
+import ru.netology.domain.Film;
 
 import java.util.Arrays;
 
