@@ -2,6 +2,7 @@ package ru.netology.manager;
 
 import lombok.*;
 import ru.netology.data.Film;
+
 import java.util.Arrays;
 
 @NoArgsConstructor
@@ -16,12 +17,7 @@ public class FilmManager {
         this.showLast = showLast;
     }
 
-    //тесты
-    // если ничего нет
-    // если есть 1 элемент
-    // если есть больше 1 элемента
     public void add(Film film) {
-
         // предполагаю, что в данной афише каждый фильм в единственном экземпяре, поэтому добавляю проверку
         boolean contains = Arrays.asList(films).contains(film); // есть ли уже этот фильм в списке
 
@@ -34,8 +30,6 @@ public class FilmManager {
             tmp[lastIndex] = film;
             films = tmp;
         }
-
-
     }
 
     public Film[] findAll() {
