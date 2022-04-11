@@ -1,16 +1,68 @@
 package ru.netology.manager;
 
 import org.junit.jupiter.api.Test;
-import ru.netology.data.Film;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import ru.netology.domain.Film;
+import ru.netology.domain.Repository;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
 
 class FilmManagerTest {
 
+    // используемые переменные фильмов
     private Film first = new Film(1, "Бладшот", "Боевик", "bloodshot_pic.webp");
     private Film second = new Film(2, "Вперёд", "Мультфильм", "onward_pic.webp");
-    private Film third = new Film(2, "Отель Белград", "Комедия", "hotelbelgrad_pic.webp");
+    private Film third = new Film(3, "Отель Белград", "Комедия", "hotelbelgrad_pic.webp");
 
+    // переписаны 3 теста на проверку метода FilmManager.findLast с использованием Mockito
+    @Mock
+    private Repository repo = Mockito.mock(Repository.class);
+    @InjectMocks
+    private FilmManager manager;
+
+    @Test
+    public void shouldFindLastIfArrayLengthIsUnderLimit() {
+        // настройка загрушки
+        manager = new FilmManager(repo, 5);
+        Film[] returned = {first, second, third};
+        doReturn(returned).when(repo).findAll();
+
+        Film[] expected = {third, second, first};
+        Film[] actual = manager.findLast();
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindLastIfArrayLengthIsAboveLimit() {
+        // настройка загрушки
+        manager = new FilmManager(repo, 2);
+        Film[] returned = {first, second, third};
+        doReturn(returned).when(repo).findAll();
+
+        Film[] expected = {third, second};
+        Film[] actual = manager.findLast();
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindLastIfArrayLengthEqualsLimit() {
+        // настройка загрушки
+        manager = new FilmManager(repo, 3);
+        Film[] returned = {first, second, third};
+        doReturn(returned).when(repo).findAll();
+
+        Film[] expected = {third, second, first};
+        Film[] actual = manager.findLast();
+
+        assertArrayEquals(expected, actual);
+    }
+
+    // остальные тесты без Mockito
     @Test
     public void shouldAddIfNoItems() {
         FilmManager manager = new FilmManager();
@@ -48,45 +100,6 @@ class FilmManagerTest {
     }
 
     @Test
-    public void shouldFindLastIfArrayLengthIsUnderLimit() {
-        FilmManager manager = new FilmManager(5);
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-
-        Film[] expected = {third, second, first};
-        Film[] actual = manager.findLast();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldFindLastIfArrayLengthIsAboveLimit() {
-        FilmManager manager = new FilmManager(2);
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-
-        Film[] expected = {third, second};
-        Film[] actual = manager.findLast();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldFindLastIfArrayLengthEqualsLimit() {
-        FilmManager manager = new FilmManager(3);
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-
-        Film[] expected = {third, second, first};
-        Film[] actual = manager.findLast();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
     public void shouldFindLastIfNoItems() {
         FilmManager manager = new FilmManager(3);
 
@@ -95,5 +108,6 @@ class FilmManagerTest {
 
         assertArrayEquals(expected, actual);
     }
+
 
 }

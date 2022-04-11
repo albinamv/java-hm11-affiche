@@ -1,43 +1,38 @@
 package ru.netology.manager;
 
 import lombok.*;
-import ru.netology.data.Film;
-
-import java.util.Arrays;
+import ru.netology.domain.Film;
+import ru.netology.domain.Repository;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class FilmManager {
 
-    private Film[] films = new Film[0];
+    private Repository repo = new Repository();
     private int showLast = 10; // макс лимит по выводу последних фильмов
 
     public FilmManager(int showLast) {
         this.showLast = showLast;
     }
 
+    // для тестов с Mockito
+    public FilmManager(Repository repo, int showLast) {
+        this.repo = repo;
+        this.showLast = showLast;
+    }
+
     public void add(Film film) {
-        // предполагаю, что в данной афише каждый фильм в единственном экземпяре, поэтому добавляю проверку
-        boolean contains = Arrays.asList(films).contains(film); // есть ли уже этот фильм в списке
-
-        if (!contains) {
-            int length = films.length + 1;
-            Film[] tmp = new Film[length];
-            System.arraycopy(films, 0, tmp, 0, films.length);
-
-            int lastIndex = tmp.length - 1;
-            tmp[lastIndex] = film;
-            films = tmp;
-        }
+        repo.save(film);
     }
 
     public Film[] findAll() {
-        return films;
+        return repo.findAll();
     }
 
     public Film[] findLast() {
         int resultLength;
+        Film[] films = repo.findAll();
 
         if (films.length >= showLast) {
             resultLength = showLast;
